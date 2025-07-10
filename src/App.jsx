@@ -56,7 +56,7 @@ const App = () => {
         <Sidebar user={user} onLogout={handleLogout} />
         
         <main className="flex-1 overflow-x-hidden">
-          <div className="md:ml-64 pt-16 md:pt-0">
+          <div className="md:ml-0 pt-5 md:pt-5">
             <Routes>
               {/* Rutas protegidas */}
               <Route path="/libros/buscar" element={<BuscarLibrosPage />} />
