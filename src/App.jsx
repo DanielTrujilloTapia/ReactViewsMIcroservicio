@@ -51,31 +51,31 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex">
+    <div className="min-h-screen bg-gray-100 flex">
+      {/* Sidebar fijo con altura completa */}
+      <div className="h-screen sticky top-0">
         <Sidebar user={user} onLogout={handleLogout} />
-        
-        <main className="flex-1 overflow-x-hidden">
-          <div className="md:ml-0 pt-5 md:pt-5">
-            <Routes>
-              {/* Rutas protegidas */}
-              <Route path="/libros/buscar" element={<BuscarLibrosPage />} />
-              <Route path="/libros/buscar-id" element={<BuscarLibroIDPage />} />
-              <Route path="/libros/nuevo" element={<NuevoLibroPage />} />
-              
-              <Route path="/autores/buscar-id" element={<BuscarAutorIDPage />} />
-              <Route path="/autores/buscar-nombre" element={<BuscarAutorNombrePage />} />
-              <Route path="/autores/nuevo" element={<NuevoAutorPage />} />
-              
-              {/* Redirección desde raíz si está autenticado */}
-              <Route path="/" element={<Navigate to={from} replace />} />
-              
-              {/* Catch-all para rutas no definidas */}
-              <Route path="*" element={<Navigate to="/libros/buscar" replace />} />
-            </Routes>
-          </div>
-        </main>
       </div>
+      
+      {/* Contenido principal con scroll controlado */}
+      <main className="flex-1 overflow-y-auto max-h-screen p-5 bg-white">
+        <Routes>
+          {/* Rutas protegidas */}
+          <Route path="/libros/buscar" element={<BuscarLibrosPage />} />
+          <Route path="/libros/buscar-id" element={<BuscarLibroIDPage />} />
+          <Route path="/libros/nuevo" element={<NuevoLibroPage />} />
+          
+          <Route path="/autores/buscar-id" element={<BuscarAutorIDPage />} />
+          <Route path="/autores/buscar-nombre" element={<BuscarAutorNombrePage />} />
+          <Route path="/autores/nuevo" element={<NuevoAutorPage />} />
+          
+          {/* Redirección desde raíz si está autenticado */}
+          <Route path="/" element={<Navigate to={from} replace />} />
+          
+          {/* Catch-all para rutas no definidas */}
+          <Route path="*" element={<Navigate to="/libros/buscar" replace />} />
+        </Routes>
+      </main>
     </div>
   );
 };
