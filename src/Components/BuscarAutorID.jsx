@@ -31,7 +31,7 @@ const BuscarAutorID = () => {
 
     try {
       const res = await fetch(
-        `https://microservicioautor-yu4t.onrender.com/api/AutorControlador/${id.trim()}`
+        `https://autor-postgres.somee.com/api/AutorControlador/${id.trim()}`
       );
 
       if (!res.ok) {

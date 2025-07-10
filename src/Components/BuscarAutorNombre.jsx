@@ -29,7 +29,7 @@ const BuscarAutorNombre = () => {
 
     try {
       const res = await fetch(
-        `https://microservicioautor-yu4t.onrender.com/api/AutorControlador/nombre/${nombre.trim()}`
+        `https://autor-postgres.somee.com/api/AutorControlador/nombre/${nombre.trim()}`
       );
 
       if (!res.ok) {

@@ -38,7 +38,7 @@ const NuevoAutor = () => {
 
     try {
       const res = await fetch(
-        "https://microservicioautor-yu4t.onrender.com/api/AutorControlador",
+        "https://autor-postgres.somee.com/api/AutorControlador",
         {
           method: "POST",
           headers: {
