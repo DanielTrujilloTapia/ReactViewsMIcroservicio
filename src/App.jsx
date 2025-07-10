@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import MobileMenu from './components/Nav/MobileMenu';
+
 import Sidebar from './components/Nav/Sidebar';
 import LoginPage from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
@@ -54,7 +54,6 @@ const App = () => {
     <div className="min-h-screen bg-gray-100">
       <div className="flex">
         <Sidebar user={user} onLogout={handleLogout} />
-        <MobileMenu user={user} onLogout={handleLogout} />
         
         <main className="flex-1 overflow-x-hidden">
           <div className="md:ml-64 pt-16 md:pt-0">
