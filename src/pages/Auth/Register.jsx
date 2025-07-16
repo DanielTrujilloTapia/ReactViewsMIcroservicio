@@ -68,7 +68,7 @@ const Register = () => {
       };
 
       // Enviar al endpoint
-      const response = await fetch('https://localhost:7144/api/LoginControlador', {
+      const response = await fetch('https://microserviciologin-811z.onrender.com/api/LoginControlador', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
