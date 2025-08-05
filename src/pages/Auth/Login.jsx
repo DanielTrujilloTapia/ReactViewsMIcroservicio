@@ -31,62 +31,64 @@ const Login = ({ onLogin }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
 
-    try {
-      // 1. Validación básica del frontend
-      if (!credentials.username.trim() || !credentials.password.trim()) {
-        throw new Error('Usuario y contraseña son requeridos');
-      }
-
-      // 2. Fetch al endpoint de autenticación
-      const response = await fetch(`https://microserviciologin-811z.onrender.com/api/LoginControlador/usuario/${encodeURIComponent(credentials.username)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(response.status === 404 
-          ? 'Usuario no encontrado' 
-          : `Error en el servidor (${response.status})`);
-      }
-
-      const userData = await response.json();
-
-      // 3. Validación de credenciales
-      if (!userData || userData.usuario !== credentials.username) {
-        throw new Error('Credenciales inválidas');
-      }
-
-      // 4. Validación de contraseña
-      if (userData.password !== credentials.password) {
-        throw new Error('Credenciales inválidas');
-      }
-
-      // 5. Almacenar datos del usuario en localStorage
-      const userToStore = {
-        id: userData.id,
-        username: userData.usuario,
-        lastLogin: new Date().toISOString(),
-        recoveryQuestion: userData.preguntaRecuperacion,
-        token: userData.loginGuid
-      };
-
-      // 6. Notificar éxito y redirigir
-      onLogin(userToStore);
-      navigate(from, { replace: true });
-
-    } catch (err) {
-      console.error('Error de autenticación:', err);
-      setError(err.message || 'Error al iniciar sesión');
-    } finally {
-      setLoading(false);
+  try {
+    if (!credentials.username.trim() || !credentials.password.trim()) {
+      throw new Error('Usuario y contraseña son requeridos');
     }
-  };
+
+    // Nuevo endpoint POST con usuario y password
+    const response = await fetch('https://microserviciologintoken.onrender.com/api/UsuarioControlador/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        usuario: credentials.username,
+        password: credentials.password
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(response.status === 404 
+        ? 'Usuario no encontrado' 
+        : `Error en el servidor (${response.status})`);
+    }
+
+    const data = await response.json();
+
+    // Validaciones básicas por si viene incompleto
+    if (!data.usuario || !data.token) {
+      throw new Error('Respuesta inválida del servidor');
+    }
+
+    // Construir el objeto a guardar
+    const userToStore = {
+      id: data.usuario.id,
+      username: data.usuario.usuario,
+      lastLogin: new Date().toISOString(),
+      recoveryQuestion: data.usuario.preguntaRecuperacion,
+      token: data.token,
+      refreshToken: data.refreshToken
+    };
+
+    // Guardar en contexto o localStorage
+    onLogin(userToStore);
+
+    // Redirigir
+    navigate(from, { replace: true });
+
+  } catch (err) {
+    console.error('Error de autenticación:', err);
+    setError(err.message || 'Error al iniciar sesión');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">

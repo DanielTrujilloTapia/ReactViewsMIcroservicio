@@ -54,7 +54,7 @@ const ForgotPassword = () => {
   const verifyUser = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`https://microserviciologin-811z.onrender.com/api/LoginControlador/usuario/${formData.usuario}`);
+      const response = await fetch(`https://localhost:7144/api/UsuarioControlador/usuario/${formData.usuario}`);
       
       if (!response.ok) {
         throw new Error('Usuario no encontrado. Verifique el nombre de usuario.');
@@ -92,14 +92,15 @@ const ForgotPassword = () => {
       }
 
       const payload = {
-        loginGuid: userData.loginGuid,
+        usuarioGuid: userData.usuarioGuid,
         usuario: userData.usuario,
         password: formData.nuevaPassword,
         preguntaRecuperacion: userData.preguntaRecuperacion,
         respuestaRecuperacion: userData.respuestaRecuperacion
       };
+      console.log(payload);
 
-      const response = await fetch('https://microserviciologin-811z.onrender.com/api/LoginControlador', {
+      const response = await fetch('https://microserviciologintoken.onrender.com/api/UsuarioControlador', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
