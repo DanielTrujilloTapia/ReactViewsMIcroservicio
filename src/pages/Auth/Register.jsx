@@ -68,7 +68,7 @@ const Register = () => {
       };
 
       // Enviar al endpoint
-      const response = await fetch('https://microserviciologin-811z.onrender.com/api/LoginControlador', {
+      const response = await fetch('https://microserviciologintoken.onrender.com/api/UsuarioControlador', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
