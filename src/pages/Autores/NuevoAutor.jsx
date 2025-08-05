@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const NuevoAutor = () => {
+const NuevoAutor = ({ onLogout }) => {
   const [form, setForm] = useState({
     nombre: "",
     apellido: "",
@@ -34,36 +34,79 @@ const NuevoAutor = () => {
 
     if (!validar()) return;
 
-    const fechaISO = new Date(form.fechaNacimiento).toISOString();
-
     try {
-      const res = await fetch(
-        "https://autor-postgres.somee.com/api/AutorControlador",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nombre: form.nombre.trim(),
-            apellido: form.apellido.trim(),
-            fechaNacimiento: fechaISO,
-          }),
-        }
-      );
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Error al registrar autor.");
-      }
-
+      const autorRegistrado = await registrarAutor(form);
       setSubmitStatus("success");
       setSubmitMessage("Autor registrado correctamente.");
       setForm({ nombre: "", apellido: "", fechaNacimiento: "" });
     } catch (error) {
       setSubmitStatus("error");
-      setSubmitMessage(error.message);
+      setSubmitMessage(error.message || "Error al registrar autor.");
     }
+  };
+
+  const registrarAutor = async (form) => {
+    let user = JSON.parse(localStorage.getItem("user"));
+    let token = user?.token;
+    let refreshToken = user?.refreshToken;
+
+    if (!token || !refreshToken) {
+      onLogout();
+      throw new Error("Sesión expirada. Inicia sesión nuevamente.");
+    }
+
+    const fechaISO = new Date(form.fechaNacimiento).toISOString();
+
+    const fetchWithToken = async (accessToken) => {
+      return await fetch("https://microservicioautorpostgres-token.onrender.com/api/Autor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          nombre: form.nombre.trim(),
+          apellido: form.apellido.trim(),
+          fechaNacimiento: fechaISO,
+        }),
+      });
+    };
+
+    let res = await fetchWithToken(token);
+
+    if (res.status === 401) {
+      console.log("El token expiro");
+      const refreshRes = await fetch(
+        "https://microserviciologintoken.onrender.com/api/UsuarioControlador/refresh-token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token, refreshToken }),
+        }
+      );
+
+      if (!refreshRes.ok) {
+        onLogout();
+        console.log("Sesión expirada el refreshToken expiro. Inicia sesión nuevamente.");
+        return;
+      }
+
+      const data = await refreshRes.json();
+      localStorage.setItem("user", JSON.stringify(data));
+      token = data.token;
+      console.log("nuevo token generado: ", token);
+
+      res = await fetchWithToken(token);
+    }
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Error al registrar autor.");
+    }
+
+    return await res.json();
   };
 
   return (

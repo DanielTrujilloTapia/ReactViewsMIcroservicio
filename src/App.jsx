@@ -67,7 +67,7 @@ const App = () => {
           
           <Route path="/autores/buscar-id" element={<BuscarAutorIDPage onLogout={handleLogout} />} />
           <Route path="/autores/buscar-nombre" element={<BuscarAutorNombrePage onLogout={handleLogout} />} />
-          <Route path="/autores/nuevo" element={<NuevoAutorPage />} />
+          <Route path="/autores/nuevo" element={<NuevoAutorPage onLogout={handleLogout} />} />
           
           {/* Redirección desde raíz si está autenticado */}
           <Route path="/" element={<Navigate to={from} replace />} />
