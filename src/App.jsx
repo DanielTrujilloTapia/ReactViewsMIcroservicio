@@ -65,8 +65,8 @@ const App = () => {
           <Route path="/libros/buscar-id" element={<BuscarLibroIDPage />} />
           <Route path="/libros/nuevo" element={<NuevoLibroPage />} />
           
-          <Route path="/autores/buscar-id" element={<BuscarAutorIDPage />} />
-          <Route path="/autores/buscar-nombre" element={<BuscarAutorNombrePage />} />
+          <Route path="/autores/buscar-id" element={<BuscarAutorIDPage onLogout={handleLogout} />} />
+          <Route path="/autores/buscar-nombre" element={<BuscarAutorNombrePage onLogout={handleLogout} />} />
           <Route path="/autores/nuevo" element={<NuevoAutorPage />} />
           
           {/* Redirección desde raíz si está autenticado */}
